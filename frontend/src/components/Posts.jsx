@@ -1,7 +1,13 @@
 import Post from "./Post";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Posts = ({ username }) => {
+  const queryClient = useQueryClient();
+
+  const { data: authUser } = useQuery({
+    queryKey: ["authUser"],
+  });
+
   const { data: posts, isLoading, isError } = useQuery({
     queryKey: username ? ["userPosts", username] : ["allPosts"],
     queryFn: async () => {
@@ -17,6 +23,35 @@ const Posts = ({ username }) => {
     },
   });
 
+  const handleEdit = (updatedPost) => {
+    queryClient.setQueryData(
+      username ? ["userPosts", username] : ["allPosts"],
+      (oldPosts) =>
+        oldPosts.map((post) =>
+          post._id === updatedPost._id ? updatedPost : post
+        )
+    );
+  };
+
+  const handleDelete = async (postId) => {
+    try {
+      const res = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        queryClient.setQueryData(
+          username ? ["userPosts", username] : ["allPosts"],
+          (oldPosts) => oldPosts.filter((post) => post._id !== postId)
+        );
+      } else {
+        console.error("Failed to delete post");
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
   if (isLoading) {
     return <p>Loading posts...</p>;
   }
@@ -31,13 +66,15 @@ const Posts = ({ username }) => {
         <Post
           key={post._id}
           post={post}
-          isMyPost={username === post.username}
-          onEdit={() => console.log("Edit post", post._id)}
-          onDelete={() => console.log("Delete post", post._id)}
+          isMyPost={authUser?._id === post.user?._id} 
+          onEdit={handleEdit}
+          onDelete={() => handleDelete(post._id)}
         />
       ))}
     </div>
   );
+  
 };
 
 export default Posts;
+

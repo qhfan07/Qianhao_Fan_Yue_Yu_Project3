@@ -43,7 +43,10 @@ const ProfilePage = () => {
         <Link to="/">
           <button className="btn btn-outline rounded-full btn-sm">Back</button>
         </Link>
-        <h1 className="text-xl font-bold">{user?.username}</h1>
+        <div className="flex items-center gap-6">
+          <h1 className="text-xl font-bold">{user?.username}</h1>
+          <p className="text-sm text-gray-500">Joined on: {user?.createdAt?.split("T")[0]}</p>
+        </div>
       </div>
       <div className="p-4">
         <p className="text-sm">{user?.bio || "No bio provided."}</p>
@@ -57,3 +60,5 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+
