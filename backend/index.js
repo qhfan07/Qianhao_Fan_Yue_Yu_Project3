@@ -9,6 +9,16 @@ import postRoutes from "./routes/post.routes.js";
 import connectMongoDB from "./db/connectMongoDB.js";
 dotenv.config();
 
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "https://qianhao-fan-yue-yu-project3.onrender.com",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, 
+  })
+);
+
 const app = express();
 
 app.use(express.json({ limit: "5mb" }));
