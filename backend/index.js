@@ -9,7 +9,7 @@ import postRoutes from "./routes/post.routes.js";
 import connectMongoDB from "./db/connectMongoDB.js";
 dotenv.config();
 
-const cors = require("cors");
+import cors from "cors";
 
 app.use(
   cors({
