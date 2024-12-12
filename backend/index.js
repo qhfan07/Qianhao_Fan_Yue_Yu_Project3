@@ -7,9 +7,10 @@ import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 
 import connectMongoDB from "./db/connectMongoDB.js";
+import cors from "cors";
 dotenv.config();
 
-import cors from "cors";
+const app = express();
 
 app.use(
   cors({
@@ -18,8 +19,6 @@ app.use(
     credentials: true, 
   })
 );
-
-const app = express();
 
 app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
