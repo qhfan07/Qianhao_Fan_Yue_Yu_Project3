@@ -24,8 +24,6 @@ const App = () => {
     },
     retry: false,
   });
-  
-  
 
   if (isLoading) {
     return (

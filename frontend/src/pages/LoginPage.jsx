@@ -11,7 +11,7 @@ const LoginPage = () => {
 
   const queryClient = useQueryClient();
 
-  const { mutate: loginMutation } = useMutation({
+  const { mutate: loginMutation, isPending, isError, error } = useMutation({
     mutationFn: async ({ username, password }) => {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -20,20 +20,22 @@ const LoginPage = () => {
         },
         body: JSON.stringify({ username, password }),
       });
-  
+
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Something went wrong");
       }
-  
+
       document.cookie = `jwt=${data.token}; path=/; Secure; SameSite=Strict`;
     },
     onSuccess: () => {
       toast.success("Logged in successfully");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
+    onError: (error) => {
+      toast.error(error.message || "Failed to login");
+    },
   });
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
