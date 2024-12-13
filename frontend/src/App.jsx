@@ -13,7 +13,8 @@ const App = () => {
     queryKey: ["authUser"],
     queryFn: async () => {
       const res = await fetch("/api/auth/me", {
-        credentials: "include", 
+        method: "GET",
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) {
@@ -23,6 +24,8 @@ const App = () => {
     },
     retry: false,
   });
+  
+  
 
   if (isLoading) {
     return (
